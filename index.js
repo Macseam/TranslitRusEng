@@ -110,7 +110,7 @@ var translitRusEng = function(enteredValue, urlReady){
         lettersEdited.push(symbolsTableEng[letter]);
       }
       else if (letter === ' ') {
-        lettersEdited.push(letter);
+        lettersEdited.push(urlReady ? '_' : letter);
       }
     }
   });
