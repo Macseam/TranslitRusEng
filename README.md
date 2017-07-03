@@ -4,8 +4,8 @@ Usage: transliterateEngRu (stringToTransliterate, [optional: true to remove apos
 
 Example:
 
-'transliterateEngRu("Широкая электрификация южных губерний")
-Result: "shirokaya e`lektrifikacziya yuzhnyh gubernij"'
+`transliterateEngRu("Широкая электрификация южных губерний")
+Result: "shirokaya e'lektrifikacziya yuzhnyh gubernij"`
 
-'transliterateEngRu("Широкая электрификация южных губерний" ,true)
-Result: "shirokaya elektrifikacziya yuzhnyh gubernij"'
+`transliterateEngRu("Широкая электрификация южных губерний" ,true)
+Result: "shirokaya elektrifikacziya yuzhnyh gubernij"`
