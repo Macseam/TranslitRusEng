@@ -1,4 +1,4 @@
-var transliterateEngRu = function(enteredValue){
+var transliterateEngRu = function(enteredValue, urlReady){
 
   // Сочетания двух букв для транслитерации
 
@@ -27,39 +27,39 @@ var transliterateEngRu = function(enteredValue){
 
   var symbolsTableEng = {};
   var symbolsTableRus = {
-    'а':'a',
-    'б':'b',
-    'в':'v',
-    'г':'g',
-    'д':'d',
-    'е':'e',
-    'ё':'yo',
-    'ж':'zh',
-    'з':'z',
-    'и':'i',
-    'й':'j',
-    'к':'k',
-    'л':'l',
-    'м':'m',
-    'н':'n',
-    'о':'o',
-    'п':'p',
-    'р':'r',
-    'с':'s',
-    'т':'t',
-    'у':'u',
-    'ф':'f',
-    'х':'h',
-    'ц':'cz',
-    'ч':'ch',
-    'ш':'sh',
-    'щ':'shh',
-    'ъ':'``',
-    'ы':'y',
-    'ь':'`',
-    'э':'e`',
-    'ю':'yu',
-    'я':'ya'
+    'а': 'a',
+    'б': 'b',
+    'в': 'v',
+    'г': 'g',
+    'д': 'd',
+    'е': 'e',
+    'ё': 'yo',
+    'ж': 'zh',
+    'з': 'z',
+    'и': 'i',
+    'й': 'j',
+    'к': 'k',
+    'л': 'l',
+    'м': 'm',
+    'н': 'n',
+    'о': 'o',
+    'п': 'p',
+    'р': 'r',
+    'с': 's',
+    'т': 't',
+    'у': 'u',
+    'ф': 'f',
+    'х': 'h',
+    'ц': 'cz',
+    'ч': 'ch',
+    'ш': 'sh',
+    'щ': 'shh',
+    'ъ': urlReady ? '' : '``',
+    'ы': 'y',
+    'ь': urlReady ? '' : '`',
+    'э': urlReady ? 'e' : 'e`',
+    'ю': 'yu',
+    'я': 'ya'
   };
 
   for (var key in symbolsTableRus) {
