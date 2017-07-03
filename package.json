@@ -1,0 +1,25 @@
+{
+  "name": "translit-rus-eng",
+  "version": "1.0.0",
+  "description": "Transliteration script for rus-eng transitions and vice versa",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Macseam/TranslitRusEng.git"
+  },
+  "keywords": [
+    "translit",
+    "rus",
+    "eng",
+    "convert",
+    "language",
+    "cyrillic",
+    "latin"
+  ],
+  "author": "Maxim Shvetsov",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Macseam/TranslitRusEng/issues"
+  },
+  "homepage": "https://github.com/Macseam/TranslitRusEng#readme"
+}
