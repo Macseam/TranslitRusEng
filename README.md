@@ -14,4 +14,4 @@ Example:
 > Result: "shirokaya e'lektrifikacziya yuzhnyh gubernij"
 
 `translitRusEng("Широкая электрификация южных губерний", true)`
-> Result: "shirokaya elektrifikacziya yuzhnyh gubernij"
+> Result: "shirokaya_elektrifikacziya_yuzhnyh_gubernij"
