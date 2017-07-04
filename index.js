@@ -14,7 +14,8 @@ var translitRusEng = function(enteredValue, urlReady){
     'ja',
     'ts',
     'kh',
-    'iy'
+    'e`',
+    '``'
   ];
 
   // Сочетания трёх букв для транслитерации
