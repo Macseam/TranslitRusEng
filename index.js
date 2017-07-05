@@ -102,7 +102,7 @@ var translitRusEng = function(enteredValue, urlReady){
 
   // Проходим по таблицам, ищем совпадения символов, транслитерируем
 
-  lettersReady.map(function(letter, index) {
+  lettersReady.map(function(letter) {
     if (letter !== false) {
       if (symbolsTableRus[letter]) {
         lettersEdited.push(symbolsTableRus[letter]);
@@ -112,6 +112,9 @@ var translitRusEng = function(enteredValue, urlReady){
       }
       else if (letter === ' ') {
         lettersEdited.push(urlReady ? '_' : letter);
+      }
+      else {
+        lettersEdited.push(letter);
       }
     }
   });
