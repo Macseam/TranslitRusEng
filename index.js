@@ -1,4 +1,4 @@
-var translitRusEng = function(enteredValue, urlReady){
+var TranslitRusEng = function(enteredValue, urlReady){
 
   // Сочетания двух букв для транслитерации
 
@@ -125,4 +125,4 @@ var translitRusEng = function(enteredValue, urlReady){
 
 };
 
-module.exports = translitRusEng;
+module.exports = TranslitRusEng;

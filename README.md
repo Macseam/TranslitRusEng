@@ -8,9 +8,9 @@ Based on [ISO 9/ГОСТ 7.79 standard](https://ru.wikipedia.org/wiki/ISO_9#.D0.
  * Transliterate from Russian to English and vice versa
 
 #### Usage:
-import translitRusEng from 'translit-rus-eng';
+import TranslitRusEng from 'translit-rus-eng';
 
-translitRusEng (arg1, arg2)
+TranslitRusEng (arg1, arg2)
 
 > arg1: string to transliterate (Russian or English)
 
@@ -20,13 +20,13 @@ translitRusEng (arg1, arg2)
 
 #### Examples:
 
-translitRusEng ("yozhik igol`chatyj"):
+TranslitRusEng ("yozhik igol`chatyj"):
 
 ```
 "ёжик игольчатый"
 ```
 
-translitRusEng ("Широкая электрификация южных губерний", true):
+TranslitRusEng ("Широкая электрификация южных губерний", true):
 
 ```
 "shirokaya_elektrifikacziya_yuzhnyh_gubernij"
