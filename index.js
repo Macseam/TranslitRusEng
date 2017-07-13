@@ -1,4 +1,22 @@
-var TranslitRusEng = function(enteredValue, urlReady){
+var translitRusEng = function(enteredValue, urlReady){
+
+  // Приводим urlReady к boolean
+  urlReady = !!urlReady;
+  var valueType = 'string';
+
+  // Проверяем, строковая ли переменная enteredValue
+  if (typeof enteredValue !== 'string') {
+    if (Object.prototype.toString.call( enteredValue ) === '[object Array]') {
+      valueType = 'array';
+      enteredValue = enteredValue.join('%===% ');
+    }
+    else if (typeof enteredValue === 'object') {
+      valueType = 'object';
+    }
+    else {
+      enteredValue = enteredValue.toString();
+    }
+  }
 
   // Сочетания двух букв для транслитерации
 
@@ -77,52 +95,70 @@ var TranslitRusEng = function(enteredValue, urlReady){
   symbolsTableEng['ju'] = 'ю';
   symbolsTableEng['kh'] = 'х';
 
-  var lettersReady = [];
-  var lettersEdited = [];
-
   // Приводим текст к нижнему регистру
 
-  enteredValue = enteredValue.toLowerCase().split('');
+  var convertLetters = function(enteredValue) {
 
-  enteredValue.map(function(letter, index){
-    if (index > 0 &&
-      (doubleLetters.indexOf(enteredValue[index-1] + enteredValue[index]) !== -1)) {
-      lettersReady[index-1] = false;
-      lettersReady[index] = enteredValue[index-1] + enteredValue[index];
-    }
-    else if (index > 1 &&
-      (tripleLetters.indexOf(enteredValue[index-2] + enteredValue[index-1] + enteredValue[index]) !== -1)) {
-      lettersReady[index-1] = lettersReady[index-2] = false;
-      lettersReady[index] = enteredValue[index-2] + enteredValue[index-1] + enteredValue[index];
-    }
-    else {
-      lettersReady.push(letter);
-    }
-  });
+    var lettersReady = [];
+    var lettersEdited = [];
 
-  // Проходим по таблицам, ищем совпадения символов, транслитерируем
+    enteredValue = enteredValue.toLowerCase().split('');
 
-  lettersReady.map(function(letter) {
-    if (letter !== false) {
-      if (symbolsTableRus[letter]) {
-        lettersEdited.push(symbolsTableRus[letter]);
+    enteredValue.map(function(letter, index){
+      if (index > 0 &&
+        (doubleLetters.indexOf(enteredValue[index-1] + enteredValue[index]) !== -1)) {
+        lettersReady[index-1] = false;
+        lettersReady[index] = enteredValue[index-1] + enteredValue[index];
       }
-      else if (symbolsTableEng[letter]) {
-        lettersEdited.push(symbolsTableEng[letter]);
-      }
-      else if (letter === ' ') {
-        lettersEdited.push(urlReady ? '_' : letter);
+      else if (index > 1 &&
+        (tripleLetters.indexOf(enteredValue[index-2] + enteredValue[index-1] + enteredValue[index]) !== -1)) {
+        lettersReady[index-1] = lettersReady[index-2] = false;
+        lettersReady[index] = enteredValue[index-2] + enteredValue[index-1] + enteredValue[index];
       }
       else {
-        lettersEdited.push(letter);
+        lettersReady.push(letter);
       }
-    }
-  });
+    });
+
+    // Проходим по таблицам, ищем совпадения символов, транслитерируем
+
+    lettersReady.map(function(letter) {
+      if (letter !== false) {
+        if (symbolsTableRus[letter]) {
+          lettersEdited.push(symbolsTableRus[letter]);
+        }
+        else if (symbolsTableEng[letter]) {
+          lettersEdited.push(symbolsTableEng[letter]);
+        }
+        else if (letter === ' ') {
+          lettersEdited.push(urlReady ? '_' : letter);
+        }
+        else {
+          lettersEdited.push(letter);
+        }
+      }
+    });
+
+    return lettersEdited;
+  };
 
   // Склеиваем строку, возвращаем
 
-  return (lettersEdited.join(''));
+  if (valueType === 'array') {
+    return (convertLetters(enteredValue).join('').split('%===%'));
+  }
+  else if (valueType === 'object') {
+    for (var objKey in enteredValue) {
+      if (enteredValue[objKey]) {
+        enteredValue[objKey] = convertLetters(enteredValue[objKey]).join('');
+      }
+    }
+    return (enteredValue);
+  }
+  else {
+    return (convertLetters(enteredValue).join(''));
+  }
 
 };
 
-module.exports = TranslitRusEng;
+module.exports = translitRusEng;

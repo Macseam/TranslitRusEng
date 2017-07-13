@@ -1,6 +1,6 @@
 {
   "name": "translit-rus-eng",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Transliteration script for rus-eng transitions and vice versa",
   "main": "index.js",
   "repository": {
