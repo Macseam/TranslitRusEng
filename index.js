@@ -1,10 +1,7 @@
-var translitRusEng = function(enteredValue, urlReady){
-
-  // Приводим urlReady к boolean
-  urlReady = !!urlReady;
-  var valueType = 'string';
+var translitRusEng = function(enteredValue, options){
 
   // Проверяем, строковая ли переменная enteredValue
+  var valueType = 'string';
   if (typeof enteredValue !== 'string') {
     if (Object.prototype.toString.call( enteredValue ) === '[object Array]') {
       valueType = 'array';
@@ -73,10 +70,10 @@ var translitRusEng = function(enteredValue, urlReady){
     'ч': 'ch',
     'ш': 'sh',
     'щ': 'shh',
-    'ъ': urlReady ? '' : '``',
+    'ъ': (options === 'slug' && options !== 'engToRus') ? '' : '``',
     'ы': 'y',
-    'ь': urlReady ? '' : '`',
-    'э': urlReady ? 'e' : 'e`',
+    'ь': (options === 'slug' && options !== 'engToRus') ? '' : '`',
+    'э': (options === 'slug' && options !== 'engToRus') ? 'e' : 'e`',
     'ю': 'yu',
     'я': 'ya'
   };
@@ -124,14 +121,14 @@ var translitRusEng = function(enteredValue, urlReady){
 
     lettersReady.map(function(letter) {
       if (letter !== false) {
-        if (symbolsTableRus[letter]) {
+        if (symbolsTableRus[letter] && options !== 'engToRus') {
           lettersEdited.push(symbolsTableRus[letter]);
         }
-        else if (symbolsTableEng[letter]) {
+        else if (symbolsTableEng[letter] && options === 'engToRus') {
           lettersEdited.push(symbolsTableEng[letter]);
         }
-        else if (letter === ' ') {
-          lettersEdited.push(urlReady ? '_' : letter);
+        else if (letter === ' ' && (options === 'slug' && options !== 'engToRus')) {
+          lettersEdited.push('_');
         }
         else {
           lettersEdited.push(letter);
