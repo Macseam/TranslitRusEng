@@ -121,7 +121,7 @@ var translitRusEng = function(enteredValue, options){
 
     lettersReady.map(function(letter) {
       if (letter !== false) {
-        if (symbolsTableRus[letter] && options !== 'engToRus') {
+        if (symbolsTableRus[letter] !== undefined && options !== 'engToRus') {
           lettersEdited.push(symbolsTableRus[letter]);
         }
         else if (symbolsTableEng[letter] && options === 'engToRus') {
