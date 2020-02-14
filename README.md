@@ -10,24 +10,30 @@ Based on [ISO 9/ГОСТ 7.79 standard](https://ru.wikipedia.org/wiki/ISO_9#.D0.
 #### Usage:
 import translitRusEng from 'translit-rus-eng';
 
-translitRusEng (arg1, arg2)
+translitRusEng (string, options)
 
-> arg1: string/array/object values to transliterate (Russian or English)
+> string: string/array/object values to transliterate (Russian or English)
 
-> arg2: optional flag, can be 'rusToEng', 'engToRus', or 'slug' (to make url-friendly slug-like strings)
+> options: object, can include booleans 'engToRus', 'slug' (to make url-friendly slug-like strings) or 'lowerCase' (to force transliteration into lowercase)
 
 ---
 
 #### Examples:
 
-translitRusEng ("yozhik igol`chatyj", 'engToRus'):
+translitRusEng ("Kol'skij poluostrov", { engToRus: true }):
 
 ```
-"ёжик игольчатый"
+"Кольский полуостров"
 ```
 
-translitRusEng ("Широкая электрификация южных губерний", 'slug'):
+translitRusEng ("Широкая электрификация южных губерний", { slug: true }):
 
 ```
 "shirokaya_elektrifikacziya_yuzhnyh_gubernij"
+```
+
+translitRusEng ("Скушай ещё этих мягких булочек", { lowerCase: true }):
+
+```
+"skushaj eshhyo e`tih myagkih bulochek"
 ```
