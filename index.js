@@ -1,4 +1,5 @@
-var translitRusEng = function(enteredValue, options){
+var translitRusEng = function(enteredValue = '', options = {}){
+  var { slug, engToRus, lowerCase } = options
 
   // Проверяем, строковая ли переменная enteredValue
   var valueType = 'string';
@@ -70,10 +71,10 @@ var translitRusEng = function(enteredValue, options){
     'ч': 'ch',
     'ш': 'sh',
     'щ': 'shh',
-    'ъ': (options === 'slug' && options !== 'engToRus') ? '' : '``',
+    'ъ': (slug && !engToRus) ? '' : '``',
     'ы': 'y',
-    'ь': (options === 'slug' && options !== 'engToRus') ? '' : '`',
-    'э': (options === 'slug' && options !== 'engToRus') ? 'e' : 'e`',
+    'ь': (slug && !engToRus) ? '' : '`',
+    'э': (slug && !engToRus) ? 'e' : 'e`',
     'ю': 'yu',
     'я': 'ya'
   };
@@ -99,7 +100,7 @@ var translitRusEng = function(enteredValue, options){
     var lettersReady = [];
     var lettersEdited = [];
 
-    enteredValue = enteredValue.toLowerCase().split('');
+    enteredValue = lowerCase ? enteredValue.toLowerCase().split('') : enteredValue.split('');
 
     enteredValue.map(function(letter, index){
       if (index > 0 &&
@@ -121,13 +122,17 @@ var translitRusEng = function(enteredValue, options){
 
     lettersReady.map(function(letter) {
       if (letter !== false) {
-        if (symbolsTableRus[letter] !== undefined && options !== 'engToRus') {
-          lettersEdited.push(symbolsTableRus[letter]);
+        var isUpperCase = letter === letter.toUpperCase();
+        var loweredLetter = letter.toLowerCase();
+        if (symbolsTableRus[loweredLetter] !== undefined && !engToRus) {
+          var resultingLetter = isUpperCase ? symbolsTableRus[loweredLetter].toUpperCase() : symbolsTableRus[loweredLetter];
+          lettersEdited.push(resultingLetter);
         }
-        else if (symbolsTableEng[letter] && options === 'engToRus') {
-          lettersEdited.push(symbolsTableEng[letter]);
+        else if (symbolsTableEng[loweredLetter] && engToRus) {
+          var resultingLetter = isUpperCase ? symbolsTableEng[loweredLetter].toUpperCase() : symbolsTableEng[loweredLetter];
+          lettersEdited.push(resultingLetter);
         }
-        else if (letter === ' ' && (options === 'slug' && options !== 'engToRus')) {
+        else if (loweredLetter === ' ' && (slug && !engToRus)) {
           lettersEdited.push('_');
         }
         else {
