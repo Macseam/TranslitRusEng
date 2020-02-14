@@ -121,15 +121,16 @@ var translitRusEng = function(enteredValue = '', options = {}){
     // Проходим по таблицам, ищем совпадения символов, транслитерируем
 
     lettersReady.map(function(letter) {
+      var capitalizeLetter = str => str.charAt(0).toUpperCase() + str.slice(1)
       if (letter !== false) {
-        var isUpperCase = letter === letter.toUpperCase();
+        var isUpperCase = letter !== '`' && letter !== '``' && (letter === letter.toUpperCase());
         var loweredLetter = letter.toLowerCase();
         if (symbolsTableRus[loweredLetter] !== undefined && !engToRus) {
-          var resultingLetter = isUpperCase ? symbolsTableRus[loweredLetter].toUpperCase() : symbolsTableRus[loweredLetter];
+          var resultingLetter = isUpperCase ? capitalizeLetter(symbolsTableRus[loweredLetter]) : symbolsTableRus[loweredLetter];
           lettersEdited.push(resultingLetter);
         }
         else if (symbolsTableEng[loweredLetter] && engToRus) {
-          var resultingLetter = isUpperCase ? symbolsTableEng[loweredLetter].toUpperCase() : symbolsTableEng[loweredLetter];
+          var resultingLetter = isUpperCase ? capitalizeLetter(symbolsTableEng[loweredLetter]) : symbolsTableEng[loweredLetter];
           lettersEdited.push(resultingLetter);
         }
         else if (loweredLetter === ' ' && (slug && !engToRus)) {
