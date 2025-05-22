@@ -1,49 +1,11 @@
-var translitRusEng = function(enteredValue = '', options = {}){
-  var { slug, engToRus, lowerCase } = options
+const translitRusEng = (enteredValue, options = {}) => {
+  const { slugify, target = '' } = options;
 
-  // Проверяем, строковая ли переменная enteredValue
-  var valueType = 'string';
-  if (typeof enteredValue !== 'string') {
-    if (Object.prototype.toString.call( enteredValue ) === '[object Array]') {
-      valueType = 'array';
-      enteredValue = enteredValue.join('%===% ');
-    }
-    else if (typeof enteredValue === 'object') {
-      valueType = 'object';
-    }
-    else {
-      enteredValue = enteredValue.toString();
-    }
-  }
+  // Поскольку slug должен быть на латинице, устраняем возможные конфликты опций
+  const targetLanguage = slugify ? 'eng' : target;
 
-  // Сочетания двух букв для транслитерации
-
-  var doubleLetters = [
-    'yo',
-    'zh',
-    'cz',
-    'ch',
-    'sh',
-    'yu',
-    'ju',
-    'ya',
-    'ja',
-    'ts',
-    'kh',
-    'e`',
-    '``'
-  ];
-
-  // Сочетания трёх букв для транслитерации
-
-  var tripleLetters = [
-    'shh'
-  ];
-
-  // Таблицы символов (за основу таблицы для латиницы берём таблицу для кириллицы)
-
-  var symbolsTableEng = {};
-  var symbolsTableRus = {
+  // Кириллическая таблица символов
+  const symbolsTableRus = {
     'а': 'a',
     'б': 'b',
     'в': 'v',
@@ -71,97 +33,96 @@ var translitRusEng = function(enteredValue = '', options = {}){
     'ч': 'ch',
     'ш': 'sh',
     'щ': 'shh',
-    'ъ': (slug && !engToRus) ? '' : '``',
+    'ъ': '``',
     'ы': 'y',
-    'ь': (slug && !engToRus) ? '' : '`',
-    'э': (slug && !engToRus) ? 'e' : 'e`',
+    'ь': '`',
+    'э': 'e`',
     'ю': 'yu',
-    'я': 'ya'
+    'я': 'ya',
   };
 
-  for (var key in symbolsTableRus) {
+  // Небольшие дополнения для таблицы символов латиницы
+  const symbolsTableEng = {
+    'c': 'ц',
+    'ts': 'ц',
+    'ja': 'я',
+    'ju': 'ю',
+    'kh': 'х',
+  };
+
+  // В остальном таблицу символов латиницы берем из кириллической таблицы
+  for (let key in symbolsTableRus) {
     if (symbolsTableRus[key]) {
       symbolsTableEng[symbolsTableRus[key]] = key;
     }
   }
 
-  // Добавляем в таблицу для латиницы случаи, которых нет в кириллической таблице
+  // Если тип данных строка - разбиваем строку на символы, если нет - приводим к строке и разбиваем
+  const splitLetters = Object.prototype.toString.call(enteredValue) === 'string'
+    ? [...enteredValue]
+    : [...`${enteredValue}`];
 
-  symbolsTableEng['c'] = 'ц';
-  symbolsTableEng['ts'] = 'ц';
-  symbolsTableEng['ja'] = 'я';
-  symbolsTableEng['ju'] = 'ю';
-  symbolsTableEng['kh'] = 'х';
+  // Счетчик пропуска обработки символов для составных букв
+  let skipIndexes = 0;
 
-  // Приводим текст к нижнему регистру
-
-  var convertLetters = function(enteredValue) {
-
-    var lettersReady = [];
-    var lettersEdited = [];
-
-    enteredValue = lowerCase ? enteredValue.toLowerCase().split('') : enteredValue.split('');
-
-    enteredValue.map(function(letter, index){
-      if (index > 0 &&
-        (doubleLetters.indexOf(enteredValue[index-1] + enteredValue[index]) !== -1)) {
-        lettersReady[index-1] = false;
-        lettersReady[index] = enteredValue[index-1] + enteredValue[index];
-      }
-      else if (index > 1 &&
-        (tripleLetters.indexOf(enteredValue[index-2] + enteredValue[index-1] + enteredValue[index]) !== -1)) {
-        lettersReady[index-1] = lettersReady[index-2] = false;
-        lettersReady[index] = enteredValue[index-2] + enteredValue[index-1] + enteredValue[index];
-      }
-      else {
-        lettersReady.push(letter);
-      }
-    });
-
-    // Проходим по таблицам, ищем совпадения символов, транслитерируем
-
-    lettersReady.map(function(letter) {
-      var capitalizeLetter = str => str.charAt(0).toUpperCase() + str.slice(1)
-      if (letter !== false) {
-        var isUpperCase = letter !== '`' && letter !== '``' && (letter === letter.toUpperCase());
-        var loweredLetter = letter.toLowerCase();
-        if (symbolsTableRus[loweredLetter] !== undefined && !engToRus) {
-          var resultingLetter = isUpperCase ? capitalizeLetter(symbolsTableRus[loweredLetter]) : symbolsTableRus[loweredLetter];
-          lettersEdited.push(resultingLetter);
-        }
-        else if (symbolsTableEng[loweredLetter] && engToRus) {
-          var resultingLetter = isUpperCase ? capitalizeLetter(symbolsTableEng[loweredLetter]) : symbolsTableEng[loweredLetter];
-          lettersEdited.push(resultingLetter);
-        }
-        else if (loweredLetter === ' ' && (slug && !engToRus)) {
-          lettersEdited.push('_');
-        }
-        else {
-          lettersEdited.push(letter);
-        }
-      }
-    });
-
-    return lettersEdited;
-  };
-
-  // Склеиваем строку, возвращаем
-
-  if (valueType === 'array') {
-    return (convertLetters(enteredValue).join('').split('%===%'));
-  }
-  else if (valueType === 'object') {
-    for (var objKey in enteredValue) {
-      if (enteredValue[objKey]) {
-        enteredValue[objKey] = convertLetters(enteredValue[objKey]).join('');
-      }
+  const result = splitLetters.map((letter, index) => {
+    if (skipIndexes > 0) {
+      skipIndexes--;
+      return;
     }
-    return (enteredValue);
-  }
-  else {
-    return (convertLetters(enteredValue).join(''));
-  }
 
-};
+    // Запоминаем регистр символа
+    const isUpperCase = letter === letter.toUpperCase() && letter.match(/[a-zA-Zа-яА-Я]/g);
+
+    const secondLetter = splitLetters[index + 1] || '';
+    const thirdLetter = splitLetters[index + 2] || '';
+
+    // Ищем совпадения по тройным, двойным и одинарным буквам
+    const letterLowered = letter.toLowerCase();
+    const doubleLetter = letter.toLowerCase() + secondLetter.toLowerCase();
+    const tripleLetter = letter.toLowerCase() + secondLetter.toLowerCase() + thirdLetter.toLowerCase();
+
+    // Ищем совпадения сначала в кириллице, потом в латинице
+    const foundInTables = (value) =>
+      (targetLanguage.toLowerCase() !== 'rus' && symbolsTableRus[value])
+      || (targetLanguage.toLowerCase() !== 'eng' && symbolsTableEng[value]);
+    const foundLetters = foundInTables(tripleLetter) || foundInTables(doubleLetter) || foundInTables(letterLowered);
+
+    // Если найдена составная буква, обрабатываем ее целиком, обработку отдельных ее символов пропускаем
+    if (foundInTables(tripleLetter)) {
+      skipIndexes += 2;
+    } else if (foundInTables(doubleLetter)) {
+      skipIndexes += 1;
+    }
+
+    // Если символ это пробел или символ не встречается в таблицах, выводим как есть
+    const letterTransliterated = (letter === ' ' || !foundLetters) ? letter : foundLetters;
+
+    // Возвращаем регистр символа, если необходимо (если буква составная, то только первому символу)
+    if (isUpperCase) {
+      if (letterTransliterated.length > 1) {
+        return letterTransliterated.charAt(0).toUpperCase() + letterTransliterated.slice(1);
+      }
+      return letterTransliterated.toUpperCase();
+    }
+
+    return letterTransliterated;
+  });
+
+  // Склеиваем символы, удаляем лишние пробелы
+  const resultJoined = result.join('');
+  const resultTrimmed = resultJoined.trim().replace(/\s\s+/g, ' ');
+
+  // Для slugify пробелы заменяем на подчеркивания, удаляем спецсимволы
+  const resultSlugified = resultTrimmed
+    .replace(/[^a-zA-Z0-9_-`]+/g, '_')
+    .replace(/`+/g, '')
+    .replace(/_+/g, '_');
+  const finalResult = slugify ? resultSlugified.toLowerCase() : resultTrimmed;
+
+  // Пустые значения выводим как есть, для строк выводим результат
+  return (enteredValue === null || enteredValue === undefined) ? enteredValue : finalResult;
+
+}
 
 module.exports = translitRusEng;

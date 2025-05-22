@@ -8,9 +8,13 @@ Based on [ISO 9/ГОСТ 7.79 standard](https://ru.wikipedia.org/wiki/ISO_9#.D0.
  * Transliterate from Russian to English and vice versa
 
 #### Usage:
-import translitRusEng from 'translit-rus-eng';
+ * import translitRusEng from 'translit-rus-eng';
 
-translitRusEng (string, options)
+---
+
+#### Version 1.x.x:
+
+ * translitRusEng (string, options)
 
 > string: string/array/object values to transliterate (Russian or English)
 
@@ -18,22 +22,46 @@ translitRusEng (string, options)
 
 ---
 
-#### Examples:
+#### Version 1.x.x examples:
 
-translitRusEng ("Kol'skij poluostrov", { engToRus: true }):
+```translitRusEng ("Kol`skij poluostrov", { engToRus: true }):```
 
-```
-"Кольский полуостров"
-```
+> "Кольский полуостров"
 
-translitRusEng ("Широкая электрификация южных губерний", { slug: true }):
+```translitRusEng ("Широкая электрификация южных губерний", { slug: true }):```
 
-```
-"shirokaya_elektrifikacziya_yuzhnyh_gubernij"
-```
+> "shirokaya_elektrifikacziya_yuzhnyh_gubernij"
 
-translitRusEng ("Скушай ещё этих мягких булочек", { lowerCase: true }):
+```translitRusEng ("Скушай ещё этих мягких булочек", { lowerCase: true }):```
 
-```
-"skushaj eshhyo e`tih myagkih bulochek"
-```
+> "skushaj eshhyo e`tih myagkih bulochek"
+
+---
+
+#### Version 2.x.x:
+
+* translitRusEng (options)
+
+> string: string value to transliterate (Russian or English, auto-selection of transliteration language)
+
+> options: object, can include string 'target' for forced target language choice (possible values are "rus" and "eng") and boolean 'slugify' (to make url-friendly slug-like strings)
+
+---
+
+#### Version 2.x.x examples:
+
+```translitRusEng ("Kol`skij poluostrov"):```
+
+> "Кольский полуостров"
+
+```translitRusEng ("Широкая электрификация южных губерний", { slugify: true }):```
+
+> "shirokaya_elektrifikacziya_yuzhnyh_gubernij"
+
+```translitRusEng ("Широкая электрификация южных губерний компанией Samsung", { target: 'eng' }):```
+
+> "Shirokaya e`lektrifikacziya yuzhnyh gubernij kompaniej Samsung"
+
+```translitRusEng ("Скушай ещё этих мягких булочек"):```
+
+> "Skushaj eshhyo e`tih myagkih bulochek"
