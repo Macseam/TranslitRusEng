@@ -1,4 +1,8 @@
-const translitRusEng = (enteredValue, slugify) => {
+const translitRusEng = (enteredValue, options = {}) => {
+  const { slugify, target = '' } = options;
+
+  // Поскольку slug должен быть на латинице, устраняем возможные конфликты опций
+  const targetLanguage = slugify ? 'eng' : target;
 
   // Кириллическая таблица символов
   const symbolsTableRus = {
@@ -68,7 +72,7 @@ const translitRusEng = (enteredValue, slugify) => {
     }
 
     // Запоминаем регистр символа
-    const isUpperCase = letter === letter.toUpperCase();
+    const isUpperCase = letter === letter.toUpperCase() && letter.match(/[a-zA-Zа-яА-Я]/g);
 
     const secondLetter = splitLetters[index + 1] || '';
     const thirdLetter = splitLetters[index + 2] || '';
@@ -79,7 +83,9 @@ const translitRusEng = (enteredValue, slugify) => {
     const tripleLetter = letter.toLowerCase() + secondLetter.toLowerCase() + thirdLetter.toLowerCase();
 
     // Ищем совпадения сначала в кириллице, потом в латинице
-    const foundInTables = (value) => symbolsTableRus[value] || symbolsTableEng[value];
+    const foundInTables = (value) =>
+      (targetLanguage.toLowerCase() !== 'rus' && symbolsTableRus[value])
+      || (targetLanguage.toLowerCase() !== 'eng' && symbolsTableEng[value]);
     const foundLetters = foundInTables(tripleLetter) || foundInTables(doubleLetter) || foundInTables(letterLowered);
 
     // Если найдена составная буква, обрабатываем ее целиком, обработку отдельных ее символов пропускаем
@@ -112,7 +118,7 @@ const translitRusEng = (enteredValue, slugify) => {
     .replace(/[^a-zA-Z0-9_-`]+/g, '_')
     .replace(/`+/g, '')
     .replace(/_+/g, '_');
-  const finalResult = slugify ? resultSlugified : resultTrimmed;
+  const finalResult = slugify ? resultSlugified.toLowerCase() : resultTrimmed;
 
   // Пустые значения выводим как есть, для строк выводим результат
   return (enteredValue === null || enteredValue === undefined) ? enteredValue : finalResult;
